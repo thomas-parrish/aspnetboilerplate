@@ -10,6 +10,10 @@ namespace Abp.Dapper
                 typeof(IDapperRepository<>),
                 typeof(IDapperRepository<,>),
                 typeof(DapperRepositoryBase<>),
+                typeof(DapperRepositoryBase<,>),
+                typeof(IReadOnlyDapperRepository<>),
+                typeof(IReadOnlyDapperRepository<,>),
+                typeof(DapperRepositoryBase<>),
                 typeof(DapperRepositoryBase<,>)
             );
         }

@@ -21,5 +21,7 @@ namespace Abp.EntityFramework
                 ReflectionHelper.IsAssignableToGenericType(property.PropertyType.GenericTypeArguments[0], typeof(IEntity<>))
                 select new EntityTypeInfo(property.PropertyType.GenericTypeArguments[0], property.DeclaringType);
         }
+
+        public IEnumerable<EntityTypeInfo> GetReadOnlyEntityTypeInfos(Type dbContextType) => GetEntityTypeInfos(dbContextType);
     }
 }

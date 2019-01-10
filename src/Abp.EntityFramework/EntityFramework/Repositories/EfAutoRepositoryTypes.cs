@@ -12,7 +12,11 @@ namespace Abp.EntityFramework.Repositories
                 typeof(IRepository<>),
                 typeof(IRepository<,>),
                 typeof(EfRepositoryBase<,>),
-                typeof(EfRepositoryBase<,,>)
+                typeof(EfRepositoryBase<,,>),
+                typeof(IReadOnlyRepository<>),
+                typeof(IReadOnlyRepository<,>),
+                typeof(EfReadOnlyRepositoryBase<,>),
+                typeof(EfReadOnlyRepositoryBase<,,>)
             );
         }
     }

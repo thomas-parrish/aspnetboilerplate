@@ -37,8 +37,6 @@ namespace Abp.EntityFrameworkCore.Tests
                         .LifestyleTransient()
                 );
             });
-
-            Configuration.IocManager.Register<IRepository<TicketListItem>, TicketListItemRepository>();
         }
 
         public override void Initialize()

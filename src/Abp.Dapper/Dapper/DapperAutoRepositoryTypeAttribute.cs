@@ -12,8 +12,19 @@ namespace Abp.Dapper
             [NotNull] Type repositoryInterface,
             [NotNull] Type repositoryInterfaceWithPrimaryKey,
             [NotNull] Type repositoryImplementation,
-            [NotNull] Type repositoryImplementationWithPrimaryKey)
-            : base(repositoryInterface, repositoryInterfaceWithPrimaryKey, repositoryImplementation, repositoryImplementationWithPrimaryKey)
+            [NotNull] Type repositoryImplementationWithPrimaryKey,
+            [NotNull] Type readOnlyRepositoryInterface,
+            [NotNull] Type readOnlyRepositoryInterfaceWithPrimaryKey,
+            [NotNull] Type readOnlyRepositoryImplementation,
+            [NotNull] Type readOnlyRepositoryImplementationWithPrimaryKey)
+            : base(repositoryInterface, 
+                repositoryInterfaceWithPrimaryKey, 
+                repositoryImplementation, 
+                repositoryImplementationWithPrimaryKey, 
+                readOnlyRepositoryInterface, 
+                readOnlyRepositoryInterfaceWithPrimaryKey, 
+                readOnlyRepositoryImplementation,
+                readOnlyRepositoryImplementationWithPrimaryKey)
         {
         }
     }

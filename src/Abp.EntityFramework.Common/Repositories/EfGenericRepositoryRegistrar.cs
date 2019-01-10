@@ -34,7 +34,11 @@ namespace Abp.EntityFramework.Repositories
                 autoRepositoryAttr.RepositoryInterface,
                 autoRepositoryAttr.RepositoryInterfaceWithPrimaryKey,
                 autoRepositoryAttr.RepositoryImplementation,
-                autoRepositoryAttr.RepositoryImplementationWithPrimaryKey
+                autoRepositoryAttr.RepositoryImplementationWithPrimaryKey,
+                autoRepositoryAttr.ReadOnlyRepositoryInterface,
+                autoRepositoryAttr.ReadOnlyRepositoryInterfaceWithPrimaryKey,
+                autoRepositoryAttr.ReadOnlyRepositoryImplementation,
+                autoRepositoryAttr.ReadOnlyRepositoryImplementationWithPrimaryKey
             );
 
             if (autoRepositoryAttr.WithDefaultRepositoryInterfaces)
@@ -45,7 +49,11 @@ namespace Abp.EntityFramework.Repositories
                     defaultAutoRepositoryTypesAttribute.RepositoryInterface,
                     defaultAutoRepositoryTypesAttribute.RepositoryInterfaceWithPrimaryKey,
                     autoRepositoryAttr.RepositoryImplementation,
-                    autoRepositoryAttr.RepositoryImplementationWithPrimaryKey
+                    autoRepositoryAttr.RepositoryImplementationWithPrimaryKey,
+                    autoRepositoryAttr.ReadOnlyRepositoryInterface,
+                    autoRepositoryAttr.ReadOnlyRepositoryInterfaceWithPrimaryKey,
+                    autoRepositoryAttr.ReadOnlyRepositoryImplementation,
+                    autoRepositoryAttr.ReadOnlyRepositoryImplementationWithPrimaryKey
                 );
             }
         }
@@ -56,7 +64,11 @@ namespace Abp.EntityFramework.Repositories
             Type repositoryInterface,
             Type repositoryInterfaceWithPrimaryKey,
             Type repositoryImplementation,
-            Type repositoryImplementationWithPrimaryKey)
+            Type repositoryImplementationWithPrimaryKey,
+            Type readOnlyRepositoryInterface,
+            Type readOnlyRepositoryInterfaceWithPrimaryKey,
+            Type readOnlyRepositoryImplementation,
+            Type readOnlyRepositoryImplementationWithPrimaryKey)
         {
             foreach (var entityTypeInfo in _dbContextEntityFinder.GetEntityTypeInfos(dbContextType))
             {
@@ -66,36 +78,64 @@ namespace Abp.EntityFramework.Repositories
                     var genericRepositoryType = repositoryInterface.MakeGenericType(entityTypeInfo.EntityType);
                     if (!iocManager.IsRegistered(genericRepositoryType))
                     {
-                        var implType = repositoryImplementation.GetGenericArguments().Length == 1
-                            ? repositoryImplementation.MakeGenericType(entityTypeInfo.EntityType)
-                            : repositoryImplementation.MakeGenericType(entityTypeInfo.DeclaringType,
-                                entityTypeInfo.EntityType);
-
-                        iocManager.IocContainer.Register(
-                            Component
-                                .For(genericRepositoryType)
-                                .ImplementedBy(implType)
-                                .Named(Guid.NewGuid().ToString("N"))
-                                .LifestyleTransient()
-                        );
+                        Register(genericRepositoryType, GetImplementedTypeWithIntKey(repositoryImplementation, entityTypeInfo));
                     }
                 }
 
                 var genericRepositoryTypeWithPrimaryKey = repositoryInterfaceWithPrimaryKey.MakeGenericType(entityTypeInfo.EntityType,primaryKeyType);
                 if (!iocManager.IsRegistered(genericRepositoryTypeWithPrimaryKey))
                 {
-                    var implType = repositoryImplementationWithPrimaryKey.GetGenericArguments().Length == 2
-                        ? repositoryImplementationWithPrimaryKey.MakeGenericType(entityTypeInfo.EntityType, primaryKeyType)
-                        : repositoryImplementationWithPrimaryKey.MakeGenericType(entityTypeInfo.DeclaringType, entityTypeInfo.EntityType, primaryKeyType);
-
-                    iocManager.IocContainer.Register(
-                        Component
-                            .For(genericRepositoryTypeWithPrimaryKey)
-                            .ImplementedBy(implType)
-                            .Named(Guid.NewGuid().ToString("N"))
-                            .LifestyleTransient()
-                    );
+                    var implType = GetImplementedTypeWithPrimaryKey(repositoryImplementationWithPrimaryKey, entityTypeInfo, primaryKeyType);
+                    
+                    Register(genericRepositoryTypeWithPrimaryKey, implType);
                 }
+            }
+
+            foreach (var readOnlyTypeInfo in _dbContextEntityFinder.GetReadOnlyEntityTypeInfos(dbContextType))
+            {
+                var primaryKeyType = EntityHelper.GetPrimaryKeyType(readOnlyTypeInfo.EntityType);
+                if (primaryKeyType == typeof(int))
+                {
+                    var genericRepositoryType = readOnlyRepositoryInterface.MakeGenericType(readOnlyTypeInfo.EntityType);
+                    if (!iocManager.IsRegistered(genericRepositoryType))
+                    {
+                        Register(genericRepositoryType, GetImplementedTypeWithIntKey(readOnlyRepositoryImplementation, readOnlyTypeInfo));
+                    }
+                }
+
+                var genericReadOnlyRepositoryTypeWithPrimaryKey = readOnlyRepositoryInterfaceWithPrimaryKey.MakeGenericType(readOnlyTypeInfo.EntityType,primaryKeyType);
+                if (!iocManager.IsRegistered(genericReadOnlyRepositoryTypeWithPrimaryKey))
+                {
+                    var implType = GetImplementedTypeWithPrimaryKey(readOnlyRepositoryImplementationWithPrimaryKey, readOnlyTypeInfo, primaryKeyType);
+
+                    Register(genericReadOnlyRepositoryTypeWithPrimaryKey, implType);
+                }
+            }
+
+            void Register(Type genericRepositoryType, Type implType)
+            {
+                iocManager.IocContainer.Register(
+                    Component
+                        .For(genericRepositoryType)
+                        .ImplementedBy(implType)
+                        .Named(Guid.NewGuid().ToString("N"))
+                        .LifestyleTransient()
+                );
+            }
+
+            Type GetImplementedTypeWithIntKey(Type type, EntityTypeInfo readOnlyTypeInfo) => type.GetGenericArguments().Length == 1
+                ? type.MakeGenericType(readOnlyTypeInfo.EntityType)
+                : type.MakeGenericType(readOnlyTypeInfo.DeclaringType,
+                    readOnlyTypeInfo.EntityType);
+
+            Type GetImplementedTypeWithPrimaryKey(Type type, EntityTypeInfo readOnlyTypeInfo,
+                Type primaryKeyType)
+            {
+                var implType = type.GetGenericArguments().Length == 2
+                    ? type.MakeGenericType(readOnlyTypeInfo.EntityType, primaryKeyType)
+                    : type.MakeGenericType(readOnlyTypeInfo.DeclaringType,
+                        readOnlyTypeInfo.EntityType, primaryKeyType);
+                return implType;
             }
         }
     }

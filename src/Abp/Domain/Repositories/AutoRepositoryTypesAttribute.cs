@@ -17,18 +17,34 @@ namespace Abp.Domain.Repositories
 
         public Type RepositoryImplementationWithPrimaryKey { get; }
 
+        public Type ReadOnlyRepositoryInterface { get; }
+
+        public Type ReadOnlyRepositoryInterfaceWithPrimaryKey { get; }
+
+        public Type ReadOnlyRepositoryImplementation { get; }
+
+        public Type ReadOnlyRepositoryImplementationWithPrimaryKey { get; }
+
         public bool WithDefaultRepositoryInterfaces { get; set; }
 
         public AutoRepositoryTypesAttribute(
             Type repositoryInterface,
             Type repositoryInterfaceWithPrimaryKey,
             Type repositoryImplementation,
-            Type repositoryImplementationWithPrimaryKey)
+            Type repositoryImplementationWithPrimaryKey,
+            Type readOnlyRepositoryInterface,
+            Type readOnlyRepositoryInterfaceWithPrimaryKey,
+            Type readOnlyRepositoryImplementation,
+            Type readOnlyRepositoryImplementationWithPrimaryKey)
         {
             RepositoryInterface = repositoryInterface;
             RepositoryInterfaceWithPrimaryKey = repositoryInterfaceWithPrimaryKey;
             RepositoryImplementation = repositoryImplementation;
             RepositoryImplementationWithPrimaryKey = repositoryImplementationWithPrimaryKey;
+            ReadOnlyRepositoryInterface = readOnlyRepositoryInterface;
+            ReadOnlyRepositoryInterfaceWithPrimaryKey = readOnlyRepositoryInterfaceWithPrimaryKey;
+            ReadOnlyRepositoryImplementation = readOnlyRepositoryImplementation;
+            ReadOnlyRepositoryImplementationWithPrimaryKey = readOnlyRepositoryImplementationWithPrimaryKey;
         }
     }
 }

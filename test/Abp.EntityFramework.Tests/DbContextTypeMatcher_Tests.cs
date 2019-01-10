@@ -78,6 +78,10 @@ namespace Abp.EntityFramework.Tests
             typeof(IRepository<>), 
             typeof(IRepository<,>), 
             typeof(EfRepositoryBase<,>), 
+            typeof(EfRepositoryBase<,,>),
+            typeof(IReadOnlyRepository<>),
+            typeof(IReadOnlyRepository<,>),
+            typeof(EfRepositoryBase<,>),
             typeof(EfRepositoryBase<,,>)
             )]
         [MultiTenancySide(MultiTenancySides.Host)]

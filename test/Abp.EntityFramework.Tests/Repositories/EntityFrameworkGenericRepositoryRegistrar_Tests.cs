@@ -81,6 +81,10 @@ namespace Abp.EntityFramework.Tests.Repositories
             typeof(IMyModuleRepository<>),
             typeof(IMyModuleRepository<,>),
             typeof(MyModuleRepositoryBase<>),
+            typeof(MyModuleRepositoryBase<,>),
+            typeof(IMyModuleReadOnlyRepository<>),
+            typeof(IMyModuleReadOnlyRepository<,>),
+            typeof(MyModuleRepositoryBase<>),
             typeof(MyModuleRepositoryBase<,>)
             )]
         public class MyModuleDbContext : MyBaseDbContext
@@ -120,6 +124,18 @@ namespace Abp.EntityFramework.Tests.Repositories
         }
 
         public interface IMyModuleRepository<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey>
+            where TEntity : class, IEntity<TPrimaryKey>
+        {
+
+        }
+
+        public interface IMyModuleReadOnlyRepository<TEntity> : IMyModuleReadOnlyRepository<TEntity, int>, IReadOnlyRepository<TEntity>
+            where TEntity : class, IEntity<int>
+        {
+
+        }
+
+        public interface IMyModuleReadOnlyRepository<TEntity, TPrimaryKey> : IReadOnlyRepository<TEntity, TPrimaryKey>
             where TEntity : class, IEntity<TPrimaryKey>
         {
 

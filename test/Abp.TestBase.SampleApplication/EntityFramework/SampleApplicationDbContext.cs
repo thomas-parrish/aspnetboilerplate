@@ -15,6 +15,10 @@ namespace Abp.TestBase.SampleApplication.EntityFramework
         typeof(IRepository<>),
         typeof(IRepository<,>),
         typeof(SampleApplicationEfRepositoryBase<>),
+        typeof(SampleApplicationEfRepositoryBase<,>),
+        typeof(IReadOnlyRepository<>),
+        typeof(IReadOnlyRepository<,>),
+        typeof(SampleApplicationEfRepositoryBase<>),
         typeof(SampleApplicationEfRepositoryBase<,>)
     )]
     public class SampleApplicationDbContext : AbpDbContext

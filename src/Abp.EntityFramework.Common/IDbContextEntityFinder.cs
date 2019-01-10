@@ -7,5 +7,6 @@ namespace Abp.EntityFramework
     public interface IDbContextEntityFinder
     {
         IEnumerable<EntityTypeInfo> GetEntityTypeInfos(Type dbContextType);
+        IEnumerable<EntityTypeInfo> GetReadOnlyEntityTypeInfos(Type dbContextType);
     }
 }

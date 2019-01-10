@@ -15,7 +15,7 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
         private readonly IRepository<Post, Guid> _postRepository;
         private readonly IRepository<Ticket> _ticketRepository;
         private readonly IUnitOfWorkManager _unitOfWorkManager;
-        private readonly IRepository<TicketListItem> _ticketListItemRepository;
+        private readonly IReadOnlyRepository<TicketListItem> _ticketListItemRepository;
 
         public Repository_Filtering_Tests()
         {
@@ -23,7 +23,7 @@ namespace Abp.EntityFrameworkCore.Tests.Tests
 
             _postRepository = Resolve<IRepository<Post, Guid>>();
             _ticketRepository = Resolve<IRepository<Ticket>>();
-            _ticketListItemRepository = Resolve<IRepository<TicketListItem>>();
+            _ticketListItemRepository = Resolve<IReadOnlyRepository<TicketListItem>>();
         }
 
         override protected void PostInitialize()
